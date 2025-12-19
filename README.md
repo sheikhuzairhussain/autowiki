@@ -1,7 +1,7 @@
 # AutoWiki
 
-AI-powered wiki generator that analyzes GitHub repositories and creates
-comprehensive documentation automatically.
+AI-powered documentation generator for your codebase. Connect a GitHub
+repository and get a comprehensive wiki in minutes.
 
 ## Overview
 
@@ -9,12 +9,13 @@ AutoWiki uses AI agents to analyze your codebase and generate beautiful,
 navigable wiki documentation. Simply provide a GitHub repository URL and
 AutoWiki will:
 
-1. **Analyze** the repository structure, architecture, and features
-2. **Generate** organized wiki pages with cross-references and source links
+1. **Connect your repo** — Paste any public GitHub URL
+2. **AI analyzes your code** — Understands structure & patterns
+3. **Get your wiki** — Auto-generated documentation
 
 ## Tech Stack
 
-- **Framework**: [Next.js 16](https://nextjs.org) with App Router
+- **Framework**: [Next.js](https://nextjs.org) with App Router
 - **AI Agents**: [Mastra](https://mastra.ai) for building AI agents
 - **Background Jobs**: [Trigger.dev](https://trigger.dev) for long-running tasks
 - **Database**: [Neon](https://neon.tech) (PostgreSQL) with
@@ -52,8 +53,7 @@ Transforms the analysis into documentation:
 - [Bun](https://bun.sh) (recommended) or Node.js 20+
 - PostgreSQL database (we recommend [Neon](https://neon.tech))
 - [Trigger.dev](https://trigger.dev) account
-- OpenAI API key
-- Google AI API key
+- OpenAI or Google AI API key
 - GitHub Personal Access Token
 
 ### Installation
@@ -80,20 +80,22 @@ cp .env.example .env
 Configure the following variables:
 
 ```env
-# Database
-DATABASE_URL=postgresql://...
+# Database (Neon PostgreSQL recommended)
+DATABASE_URL="postgresql://..."
 
-# AI Models (e.g., "openai:gpt-4o" or "google:gemini-2.0-flash")
-ANALYZER_MODEL=openai:o3
-GENERATOR_MODEL=google:gemini-2.5-pro
-
-# API Keys
-OPENAI_API_KEY=sk-...
-GOOGLE_GENERATIVE_AI_API_KEY=...
-TRIGGER_SECRET_KEY=tr_dev_...
+# API Keys (at least one AI provider required)
+OPENAI_API_KEY="sk-..."
+GOOGLE_GENERATIVE_AI_API_KEY="..."
 
 # GitHub MCP (Personal Access Token with repo scope)
-GITHUB_MCP_PAT=ghp_...
+GITHUB_MCP_PAT="github_pat_..."
+
+# AI Models for analysis and generation
+ANALYZER_MODEL="openai/gpt-5-mini"
+GENERATOR_MODEL="openai/gpt-5-mini"
+
+# Trigger.dev secret key
+TRIGGER_SECRET_KEY="tr_dev_..."
 ```
 
 4. Run database migrations:
@@ -111,7 +113,7 @@ bun dev
 6. In a separate terminal, start the Trigger.dev worker:
 
 ```bash
-bunx trigger dev
+bunx trigger.dev dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to use AutoWiki.
@@ -121,7 +123,6 @@ Open [http://localhost:3000](http://localhost:3000) to use AutoWiki.
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── dashboard/          # Project dashboard
 │   └── projects/           # Wiki viewer
 ├── components/             # React components
 ├── db/                     # Database schema and client
@@ -132,6 +133,11 @@ src/
 ├── trigger/                # Background tasks
 └── trpc/                   # tRPC routers
 ```
+
+## Author
+
+Created with ❤️ by
+[Sheikh Uzair Hussain](https://www.linkedin.com/in/sheikhuzairhussain)
 
 ## License
 
