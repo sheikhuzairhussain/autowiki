@@ -7,8 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
-import { trpc } from "@/trpc/client";
 import type { Wiki } from "@/schemas/wiki";
+import { trpc } from "@/trpc/client";
 
 interface WikiPageProps {
   params: Promise<{
@@ -111,7 +111,7 @@ export default function WikiPage({ params }: WikiPageProps) {
             ) : (
               <>
                 <RefreshCw className="size-4" />
-                Retry Analysis
+                Retry
               </>
             )}
           </Button>

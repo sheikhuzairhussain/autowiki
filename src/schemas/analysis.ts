@@ -7,17 +7,16 @@ export type Confidence = z.infer<typeof Confidence>;
 
 export const Citation = z
   .object({
-    url: z
+    file: z
       .string()
-      .url()
       .describe(
-        "Git URL to the code (e.g., https://github.com/owner/repo/blob/main/src/file.ts#L10-L20)",
+        "File path relative to repository root (e.g., src/components/Button.tsx)",
       ),
     description: z
       .string()
       .describe("What this code does (for inline citation context)"),
   })
-  .describe("A reference to a specific location in the codebase via git URL");
+  .describe("A reference to a specific file in the codebase");
 export type Citation = z.infer<typeof Citation>;
 
 export const UserFlow = z
@@ -49,7 +48,7 @@ export const EntryPoint = z
       ),
     description: z.string().describe("What it does"),
     example: z.string().optional().describe("Usage example"),
-    citation: Citation.describe("Where it's defined"),
+    file: z.string().describe("File path where it's defined"),
   })
   .describe("An entry point or interface that users/developers interact with");
 export type EntryPoint = z.infer<typeof EntryPoint>;
@@ -111,6 +110,11 @@ export const ProjectAnalysis = z
   .object({
     name: z.string().describe("Repository name"),
     url: z.string().url().optional().describe("Repository URL"),
+    branch: z
+      .string()
+      .describe(
+        "Branch name inferred from the URL (e.g., from /tree/master or /blob/main/) or determined via tools",
+      ),
     summary: z
       .string()
       .describe(

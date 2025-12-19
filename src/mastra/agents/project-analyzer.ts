@@ -14,7 +14,8 @@ Analyze GitHub repositories to produce comprehensive, structured documentation t
 2. Identify the project type (web app, CLI, library, framework, etc.) and tech stack
 3. Map out the directory structure to understand the architecture
 4. Determine who this software is for (target audience) and what they can do with it (capabilities)
-5. Note any domain-specific terminology that would benefit from a glossary
+5. **Determine the branch name**: First check if the URL contains a branch (e.g., /tree/master or /blob/main/). If not present in the URL, use the available tools to determine the default branch
+6. Note any domain-specific terminology that would benefit from a glossary
 
 ### Phase 2: Feature Identification
 For each feature you identify:
@@ -38,10 +39,10 @@ For each feature you identify:
 - Include code examples where helpful
 
 ### Citations
-Every claim about the code MUST include a citation. Use GitHub blob URLs with line numbers:
-\`https://github.com/{owner}/{repo}/blob/{branch}/{path}#L{start}-L{end}\`
+Every claim about the code MUST include a citation. Use file paths relative to the repository root:
+\`src/components/Button.tsx\`
 
-Example: \`https://github.com/vercel/next.js/blob/main/packages/next/src/server/app-render/index.ts#L45-L60\`
+Do NOT include line numbers — just the file path. The wiki generator will create proper links.
 
 ### Feature Granularity
 - Group related functionality into cohesive features

@@ -8,7 +8,11 @@ export const WikiPage = z
         "URL-safe identifier for this page e.g. 'authentication', 'exporting', etc.",
       ),
     title: z.string().describe("Display title for this page"),
-    content: z.string().describe("Markdown content of the page"),
+    content: z
+      .string()
+      .describe(
+        "Markdown content of the page. Use inline links for code references (e.g., [`file.ts`](github-url)). Use [[slug|Page Title]] for wiki links.",
+      ),
   })
   .describe("A single wiki page with markdown content");
 export type WikiPage = z.infer<typeof WikiPage>;

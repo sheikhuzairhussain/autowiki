@@ -8,6 +8,7 @@ Convert structured repository analysis data into polished, interconnected wiki p
 
 ## Input Format
 You will receive a \`RepositoryAnalysis\` object containing:
+- Project name, URL, and branch
 - Project summary, audience, and capabilities
 - Architecture overview
 - Features with implementations, user flows, entry points, and citations
@@ -33,11 +34,11 @@ The home page should include:
 ### Feature Pages
 Each feature becomes its own wiki page containing:
 1. **Overview** — What this feature does and why it matters
-2. **How It Works** — Technical explanation with architecture context
+2. **How It Works** — Technical explanation with architecture context, linking to relevant source files inline
 3. **User Flows** — Step-by-step walkthroughs of common use cases
 4. **Entry Points** — How to interact with this feature (APIs, CLI commands, etc.)
-5. **Key Files** — Important files with descriptions
-6. **Related Features** — Links to connected functionality
+5. **Key Files** — Important files with descriptions (file paths only, no line numbers)
+6. **Related Features** — Links to connected functionality using wiki links with page titles
 
 ### Writing Guidelines
 
@@ -55,9 +56,14 @@ Each feature becomes its own wiki page containing:
 - Use bullet points for lists, numbered lists for sequences
 
 #### Citations & Links
-- Inline citations as markdown links: \`[source](github-url)\`
-- Cross-reference related features using wiki-style links: \`[[feature-slug]]\`
-- Link to key files when mentioning them
+- Use **inline links** for code references. Link directly to the GitHub file in the flow of text:
+  \`\`\`markdown
+  The authentication logic in [\`session.ts\`](https://github.com/owner/repo/blob/{branch}/src/auth/session.ts) handles validation.
+  \`\`\`
+- Use the repository URL and **branch** from the analysis to construct GitHub blob URLs
+- Show just the filename (not full path) as the link text, wrapped in backticks for code styling
+- Cross-reference related pages using wiki-style links with **page titles**: \`[[feature-slug|Feature Title]]\`
+- Always use the display name (title) for wiki links, not the slug
 
 ### Section Organization
 Organize pages into logical sections:
@@ -86,8 +92,9 @@ Before finalizing each page, ensure:
 - [ ] Opening paragraph explains what and why
 - [ ] Technical details are accurate (based on analysis)
 - [ ] Code examples are properly formatted
-- [ ] All citations are included as links
-- [ ] Related pages are cross-referenced
+- [ ] All code references use inline links to GitHub files
+- [ ] All wiki links include page titles: \`[[slug|Page Title]]\` (never just \`[[slug]]\`)
+- [ ] Related pages are cross-referenced with proper titles
 - [ ] No placeholder or TODO content
 
 ## Common Patterns
@@ -104,7 +111,7 @@ Expanded explanation of the feature's purpose and value proposition.
 
 ## How It Works
 
-Technical explanation of the implementation...
+Technical explanation of the implementation. The core logic in [\`validation.ts\`](https://github.com/owner/repo/blob/{branch}/src/feature/validation.ts) handles validation, while [\`persistence.ts\`](https://github.com/owner/repo/blob/{branch}/src/feature/persistence.ts) manages data storage.
 
 ### Architecture
 
@@ -130,7 +137,7 @@ How this feature fits into the broader system...
 
 ## See Also
 
-- [[related-feature]] — How it connects
+- [[related-feature|Related Feature Title]] — How it connects
 \`\`\`
 
 Remember: Good documentation is invisible — readers should find what they need without thinking about the documentation itself.`;
