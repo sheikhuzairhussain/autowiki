@@ -89,7 +89,7 @@ export function ProjectSwitcher({
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-(--radix-dropdown-menu-trigger-width) min-w-64"
+              className="w-(--radix-dropdown-menu-trigger-width)"
               align="start"
             >
               {projects.map((project) => (

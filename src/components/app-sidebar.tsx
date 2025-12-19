@@ -1,15 +1,10 @@
 "use client";
 
-import { Book, Minus, Plus } from "lucide-react";
+import { Book } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import type * as React from "react";
 import { ProjectSwitcher } from "@/components/project-switcher";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
@@ -22,7 +17,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
   Tooltip,
@@ -57,7 +51,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
   const wiki = currentProject?.wiki as Wiki | null;
 
   return (
-    <Sidebar {...props}>
+    <Sidebar collapsible="none" className="sticky top-0 h-svh" {...props}>
       <SidebarHeader>
         <div className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-foreground">
@@ -84,58 +78,45 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
           <SidebarGroup>
             <SidebarGroupLabel>TABLE OF CONTENTS</SidebarGroupLabel>
             <SidebarMenu>
-              {wiki.sections.map((section, index) => (
-                <Collapsible
-                  key={section.slug}
-                  defaultOpen={section.slug === sectionSlug || index === 0}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton>
-                        {section.name}
-                        <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                        <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    {section.pages.length > 0 && (
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {section.pages.map((page) => (
-                            <SidebarMenuSubItem key={page.slug}>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <SidebarMenuSubButton
-                                    asChild
-                                    isActive={
-                                      section.slug === sectionSlug &&
-                                      page.slug === pageSlug
-                                    }
-                                  >
-                                    <Link
-                                      href={`/projects/${projectId}/wiki/${section.slug}/${page.slug}`}
-                                    >
-                                      <span>{page.title}</span>
-                                    </Link>
-                                  </SidebarMenuSubButton>
-                                </TooltipTrigger>
-                                <TooltipContent side="right">
-                                  {page.title}
-                                </TooltipContent>
-                              </Tooltip>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    )}
-                  </SidebarMenuItem>
-                </Collapsible>
+              {wiki.sections.map((section) => (
+                <SidebarMenuItem key={section.slug}>
+                  <SidebarMenuButton className="font-medium">
+                    {section.name}
+                  </SidebarMenuButton>
+                  {section.pages.length > 0 && (
+                    <SidebarMenuSub>
+                      {section.pages.map((page) => (
+                        <SidebarMenuSubItem key={page.slug}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={
+                                  section.slug === sectionSlug &&
+                                  page.slug === pageSlug
+                                }
+                              >
+                                <Link
+                                  href={`/projects/${projectId}/wiki/${section.slug}/${page.slug}`}
+                                >
+                                  <span>{page.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                              {page.title}
+                            </TooltipContent>
+                          </Tooltip>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  )}
+                </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroup>
         )}
       </SidebarContent>
-      <SidebarRail />
     </Sidebar>
   );
 }

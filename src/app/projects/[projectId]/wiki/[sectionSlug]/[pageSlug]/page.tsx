@@ -3,8 +3,6 @@
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
 import type { Wiki } from "@/schemas/wiki";
@@ -147,11 +145,6 @@ export default function WikiPage({ params }: WikiPageProps) {
   return (
     <>
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-        <SidebarTrigger className="-ml-1" />
-        <Separator
-          orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
-        />
         <WikiBreadcrumbs sectionName={section.name} pageName={page.title} />
       </header>
       <div className="flex flex-1 flex-col p-6">
