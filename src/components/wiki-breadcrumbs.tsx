@@ -13,7 +13,10 @@ interface WikiBreadcrumbsProps {
   pageName: string;
 }
 
-export function WikiBreadcrumbs({ sectionName, pageName }: WikiBreadcrumbsProps) {
+export function WikiBreadcrumbs({
+  sectionName,
+  pageName,
+}: WikiBreadcrumbsProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList>

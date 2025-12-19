@@ -12,7 +12,11 @@ interface WikiContentProps {
 }
 
 function isExternalLink(href: string): boolean {
-  return href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:");
+  return (
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("mailto:")
+  );
 }
 
 function isAnchorLink(href: string): boolean {
@@ -22,13 +26,20 @@ function isAnchorLink(href: string): boolean {
 // Convert [[page-name]] wiki-style links to standard markdown links
 function convertWikiLinks(content: string): string {
   // Match [[link]] or [[link|display text]]
-  return content.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, link, displayText) => {
-    const text = displayText || link;
-    return `[${text}](${link})`;
-  });
+  return content.replace(
+    /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,
+    (_, link, displayText) => {
+      const text = displayText || link;
+      return `[${text}](${link})`;
+    },
+  );
 }
 
-export function WikiContent({ content, projectId, currentSectionSlug }: WikiContentProps) {
+export function WikiContent({
+  content,
+  projectId,
+  currentSectionSlug,
+}: WikiContentProps) {
   const processedContent = useMemo(() => convertWikiLinks(content), [content]);
 
   const resolveWikiLink = (href: string): string => {
@@ -38,7 +49,7 @@ export function WikiContent({ content, projectId, currentSectionSlug }: WikiCont
 
     // Remove leading ./ if present
     let cleanHref = href.replace(/^\.\//, "");
-    
+
     // Handle ../ for going up to different section
     if (cleanHref.startsWith("../")) {
       cleanHref = cleanHref.replace(/^\.\.\//, "");
@@ -77,7 +88,12 @@ export function WikiContent({ content, projectId, currentSectionSlug }: WikiCont
             // External links - open in new tab
             if (isExternalLink(href)) {
               return (
-                <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  {...props}
+                >
                   {children}
                 </a>
               );
@@ -95,15 +111,20 @@ export function WikiContent({ content, projectId, currentSectionSlug }: WikiCont
             className,
             children,
             ...props
-          }: ComponentPropsWithoutRef<"section"> & { "data-footnotes"?: boolean }) => {
-            const isFootnotes = className?.includes("footnotes") || props["data-footnotes"];
+          }: ComponentPropsWithoutRef<"section"> & {
+            "data-footnotes"?: boolean;
+          }) => {
+            const isFootnotes =
+              className?.includes("footnotes") || props["data-footnotes"];
             if (isFootnotes) {
               return (
                 <section
                   className="border-t border-border pt-4 mt-8 not-prose"
                   {...props}
                 >
-                  <h3 className="text-sm font-medium mb-3 text-foreground">References</h3>
+                  <h3 className="text-sm font-medium mb-3 text-foreground">
+                    References
+                  </h3>
                   <div className="text-sm [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_a[data-footnote-backref]]:hidden">
                     {children}
                   </div>

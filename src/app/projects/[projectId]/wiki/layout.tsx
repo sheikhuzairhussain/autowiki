@@ -2,11 +2,11 @@
 
 import type { ReactNode } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
-import { POLLING_INTERVAL_ACTIVE, POLLING_INTERVAL_IDLE } from "@/lib/constants";
+  POLLING_INTERVAL_ACTIVE,
+  POLLING_INTERVAL_IDLE,
+} from "@/lib/constants";
 import { trpc } from "@/trpc/client";
 
 interface WikiLayoutProps {
@@ -22,7 +22,7 @@ export default function WikiLayout({ children }: WikiLayoutProps) {
         (p) =>
           p.status === "pending" ||
           p.status === "analyzing" ||
-          p.status === "generating-wiki"
+          p.status === "generating-wiki",
       );
       return hasPending ? POLLING_INTERVAL_ACTIVE : POLLING_INTERVAL_IDLE;
     },

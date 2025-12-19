@@ -45,7 +45,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
 
   const { data: currentProject } = trpc.projects.get.useQuery(
     { id: projectId ?? "" },
-    { enabled: !!projectId }
+    { enabled: !!projectId },
   );
 
   const wiki = currentProject?.wiki as Wiki | null;
@@ -53,11 +53,16 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="none" className="sticky top-0 h-svh" {...props}>
       <SidebarHeader>
-        <Link href="/" className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80">
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80"
+        >
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-foreground">
             <Book className="h-4 w-4 text-background" />
           </div>
-          <span className="text-base font-semibold tracking-tight">AutoWiki</span>
+          <span className="text-base font-semibold tracking-tight">
+            AutoWiki
+          </span>
         </Link>
         <ProjectSwitcher
           projects={projects}
@@ -95,42 +100,42 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
               <SidebarGroupLabel>TABLE OF CONTENTS</SidebarGroupLabel>
               <SidebarMenu>
                 {wiki.sections.map((section) => (
-                <SidebarMenuItem key={section.slug}>
-                  <SidebarMenuButton className="font-medium">
-                    {section.name}
-                  </SidebarMenuButton>
-                  {section.pages.length > 0 && (
-                    <SidebarMenuSub>
-                      {section.pages.map((page) => (
-                        <SidebarMenuSubItem key={page.slug}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={
-                                  section.slug === sectionSlug &&
-                                  page.slug === pageSlug
-                                }
-                              >
-                                <Link
-                                  href={`/projects/${projectId}/wiki/${section.slug}/${page.slug}`}
+                  <SidebarMenuItem key={section.slug}>
+                    <SidebarMenuButton className="font-medium">
+                      {section.name}
+                    </SidebarMenuButton>
+                    {section.pages.length > 0 && (
+                      <SidebarMenuSub>
+                        {section.pages.map((page) => (
+                          <SidebarMenuSubItem key={page.slug}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={
+                                    section.slug === sectionSlug &&
+                                    page.slug === pageSlug
+                                  }
                                 >
-                                  <span>{page.title}</span>
-                                </Link>
-                              </SidebarMenuSubButton>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                              {page.title}
-                            </TooltipContent>
-                          </Tooltip>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
+                                  <Link
+                                    href={`/projects/${projectId}/wiki/${section.slug}/${page.slug}`}
+                                  >
+                                    <span>{page.title}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </TooltipTrigger>
+                              <TooltipContent side="right">
+                                {page.title}
+                              </TooltipContent>
+                            </Tooltip>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    )}
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
           </>
         )}
       </SidebarContent>

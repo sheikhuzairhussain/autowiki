@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,7 +21,6 @@ import {
   createProjectSchema,
 } from "@/schemas/project";
 import { trpc } from "@/trpc/client";
-import { toast } from "sonner";
 
 function extractRepoName(url: string): string {
   try {
@@ -127,11 +127,7 @@ export function CreateProjectDialog({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="name">Project Name</Label>
-              <Input
-                id="name"
-                placeholder="my-project"
-                {...register("name")}
-              />
+              <Input id="name" placeholder="my-project" {...register("name")} />
               {errors.name && (
                 <p className="text-sm text-destructive">
                   {errors.name.message}

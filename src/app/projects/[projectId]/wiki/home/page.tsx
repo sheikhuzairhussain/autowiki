@@ -3,9 +3,9 @@
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
+import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import type { Wiki } from "@/schemas/wiki";
 import { trpc } from "@/trpc/client";
 
@@ -41,7 +41,7 @@ export default function WikiHomePage({ params }: WikiHomePageProps) {
         }
         return false;
       },
-    }
+    },
   );
 
   const retryMutation = trpc.projects.retry.useMutation({

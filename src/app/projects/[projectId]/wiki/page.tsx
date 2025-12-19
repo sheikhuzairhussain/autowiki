@@ -1,12 +1,12 @@
 "use client";
 
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
-import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { use, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
-import { trpc } from "@/trpc/client";
 import type { Wiki } from "@/schemas/wiki";
+import { trpc } from "@/trpc/client";
 
 interface WikiRedirectPageProps {
   params: Promise<{
@@ -41,7 +41,7 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
         }
         return false;
       },
-    }
+    },
   );
 
   const retryMutation = trpc.projects.retry.useMutation({

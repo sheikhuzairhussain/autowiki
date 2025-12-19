@@ -3,9 +3,9 @@
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
+import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import type { Wiki } from "@/schemas/wiki";
 import { trpc } from "@/trpc/client";
 
@@ -43,7 +43,7 @@ export default function WikiPage({ params }: WikiPageProps) {
         }
         return false;
       },
-    }
+    },
   );
 
   const retryMutation = trpc.projects.retry.useMutation({
@@ -124,9 +124,7 @@ export default function WikiPage({ params }: WikiPageProps) {
   if (!wiki) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="text-muted-foreground">
-          Wiki data is missing
-        </div>
+        <div className="text-muted-foreground">Wiki data is missing</div>
       </div>
     );
   }

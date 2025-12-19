@@ -82,7 +82,9 @@ export function ProjectSwitcher({
                     {currentProject?.name || "Select Project"}
                   </span>
                   {currentProject && (
-                    <span className="text-xs text-muted-foreground truncate">{currentProject.url}</span>
+                    <span className="text-xs text-muted-foreground truncate">
+                      {currentProject.url}
+                    </span>
                   )}
                 </div>
                 <ChevronsUpDown className="ml-auto" />
