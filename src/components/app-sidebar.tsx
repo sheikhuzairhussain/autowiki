@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus } from "lucide-react";
+import { Book, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import type * as React from "react";
@@ -29,8 +29,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { trpc } from "@/trpc/client";
 import type { Wiki } from "@/schemas/wiki";
+import { trpc } from "@/trpc/client";
 
 interface Project {
   id: string | null;
@@ -59,6 +59,12 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
+        <div className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-foreground">
+            <Book className="h-4 w-4 text-background" />
+          </div>
+          <span className="text-base font-semibold tracking-tight">AutoWiki</span>
+        </div>
         <ProjectSwitcher
           projects={projects}
           currentProject={
@@ -66,6 +72,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
               ? {
                   id: currentProject.id,
                   name: currentProject.name,
+                  url: currentProject.url,
                   wiki: wiki,
                 }
               : undefined

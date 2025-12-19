@@ -30,6 +30,7 @@ interface ProjectSwitcherProps {
   currentProject?: {
     id: string | null;
     name: string | null;
+    url: string;
     wiki: Wiki | null;
   };
 }
@@ -73,17 +74,15 @@ export function ProjectSwitcher({
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3 border"
               >
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <FolderGit2 className="size-4" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">
+                <FolderGit2 className="size-5 text-muted-foreground shrink-0" />
+                <div className="flex flex-col gap-0.5 leading-none min-w-0">
+                  <span className="font-medium truncate">
                     {currentProject?.name || "Select Project"}
                   </span>
                   {currentProject && (
-                    <span className="text-xs text-muted-foreground">Wiki</span>
+                    <span className="text-xs text-muted-foreground truncate">{currentProject.url}</span>
                   )}
                 </div>
                 <ChevronsUpDown className="ml-auto" />
@@ -99,7 +98,7 @@ export function ProjectSwitcher({
                   onSelect={() => handleProjectSelect(project)}
                   className="flex items-start gap-3 py-2"
                 >
-                  <FolderGit2 className="size-4 mt-0.5 shrink-0" />
+                  <FolderGit2 className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
                   <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                     <span className="flex items-center gap-1.5 font-medium">
                       <span className="truncate">
