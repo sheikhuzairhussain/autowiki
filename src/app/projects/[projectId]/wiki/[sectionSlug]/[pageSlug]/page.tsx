@@ -3,7 +3,6 @@
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
 import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import type { Wiki } from "@/schemas/wiki";
@@ -142,17 +141,12 @@ export default function WikiPage({ params }: WikiPageProps) {
   }
 
   return (
-    <>
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-        <WikiBreadcrumbs sectionName={section.name} pageName={page.title} />
-      </header>
-      <div className="flex flex-1 flex-col p-6">
-        <WikiContent
-          content={page.content}
-          projectId={projectId}
-          currentSectionSlug={sectionSlug}
-        />
-      </div>
-    </>
+    <div className="flex flex-1 flex-col p-6">
+      <WikiContent
+        content={page.content}
+        projectId={projectId}
+        currentSectionSlug={sectionSlug}
+      />
+    </div>
   );
 }

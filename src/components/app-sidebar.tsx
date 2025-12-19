@@ -17,6 +17,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
   Tooltip,
@@ -51,7 +52,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
   const wiki = currentProject?.wiki as Wiki | null;
 
   return (
-    <Sidebar collapsible="none" className="sticky top-0 h-svh" {...props}>
+    <Sidebar {...props}>
       <SidebarHeader>
         <Link
           href="/"
@@ -139,6 +140,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
           </>
         )}
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -1,4 +1,4 @@
-import { logger, task } from "@trigger.dev/sdk/v3";
+import { task } from "@trigger.dev/sdk/v3";
 import { mastra } from "@/mastra";
 import { ProjectAnalysis } from "@/schemas/analysis";
 
