@@ -1,4 +1,5 @@
 import { MCPClient } from "@mastra/mcp";
+import { env } from "@/lib/env";
 
 export const mcp = new MCPClient({
   servers: {
@@ -6,7 +7,7 @@ export const mcp = new MCPClient({
       url: new URL("https://api.githubcopilot.com/mcp/"),
       requestInit: {
         headers: {
-          Authorization: `Bearer ${process.env.GITHUB_MCP_PAT}`,
+          Authorization: `Bearer ${env.GITHUB_MCP_PAT}`,
           "X-MCP-Toolsets": "repos",
         },
       },

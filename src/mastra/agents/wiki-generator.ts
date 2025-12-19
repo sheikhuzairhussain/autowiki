@@ -62,7 +62,8 @@ Each feature becomes its own wiki page containing:
   \`\`\`
 - Use the repository URL and **branch** from the analysis to construct GitHub blob URLs
 - Show just the filename (not full path) as the link text, wrapped in backticks for code styling
-- Cross-reference related pages using wiki-style links with **page titles**: \`[[feature-slug|Feature Title]]\`
+- Cross-reference related pages using wiki-style links with **section and page slugs**: \`[[section-slug/page-slug|Page Title]]\`
+- Always include the section slug in wiki links so they work from any page (including the home page)
 - Always use the display name (title) for wiki links, not the slug
 
 ### Section Organization
@@ -93,7 +94,7 @@ Before finalizing each page, ensure:
 - [ ] Technical details are accurate (based on analysis)
 - [ ] Code examples are properly formatted
 - [ ] All code references use inline links to GitHub files
-- [ ] All wiki links include page titles: \`[[slug|Page Title]]\` (never just \`[[slug]]\`)
+- [ ] All wiki links use full paths: \`[[section-slug/page-slug|Page Title]]\` (never just \`[[page-slug]]\`)
 - [ ] Related pages are cross-referenced with proper titles
 - [ ] No placeholder or TODO content
 
@@ -137,7 +138,7 @@ How this feature fits into the broader system...
 
 ## See Also
 
-- [[related-feature|Related Feature Title]] — How it connects
+- [[features/related-feature|Related Feature Title]] — How it connects
 \`\`\`
 
 Remember: Good documentation is invisible — readers should find what they need without thinking about the documentation itself.`;

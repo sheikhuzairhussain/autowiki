@@ -1,6 +1,6 @@
 "use client";
 
-import { Book } from "lucide-react";
+import { Book, Home } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import type * as React from "react";
@@ -53,12 +53,12 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="none" className="sticky top-0 h-svh" {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80">
+        <Link href="/" className="flex items-center gap-2.5 px-2 py-3 transition-opacity hover:opacity-80">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-foreground">
             <Book className="h-4 w-4 text-background" />
           </div>
           <span className="text-base font-semibold tracking-tight">AutoWiki</span>
-        </div>
+        </Link>
         <ProjectSwitcher
           projects={projects}
           currentProject={
@@ -75,10 +75,26 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         {wiki && (
-          <SidebarGroup>
-            <SidebarGroupLabel>TABLE OF CONTENTS</SidebarGroupLabel>
-            <SidebarMenu>
-              {wiki.sections.map((section) => (
+          <>
+            <SidebarGroup className="pb-0">
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={!sectionSlug && !pageSlug}
+                  >
+                    <Link href={`/projects/${projectId}/wiki/home`}>
+                      <Home className="size-4" />
+                      <span>{wiki.home.title || "Home"}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
+            <SidebarGroup className="pt-0">
+              <SidebarGroupLabel>TABLE OF CONTENTS</SidebarGroupLabel>
+              <SidebarMenu>
+                {wiki.sections.map((section) => (
                 <SidebarMenuItem key={section.slug}>
                   <SidebarMenuButton className="font-medium">
                     {section.name}
@@ -115,6 +131,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
               ))}
             </SidebarMenu>
           </SidebarGroup>
+          </>
         )}
       </SidebarContent>
     </Sidebar>

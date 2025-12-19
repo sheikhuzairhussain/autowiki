@@ -1,13 +1,14 @@
 "use client";
 
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
-import { use, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/trpc/client";
+import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
+import { WikiContent } from "@/components/wiki-content";
 import type { Wiki } from "@/schemas/wiki";
+import { trpc } from "@/trpc/client";
 
-interface WikiRedirectPageProps {
+interface WikiHomePageProps {
   params: Promise<{
     projectId: string;
   }>;
@@ -21,9 +22,8 @@ const STATUS_MESSAGES = {
   completed: "",
 };
 
-export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
+export default function WikiHomePage({ params }: WikiHomePageProps) {
   const { projectId } = use(params);
-  const router = useRouter();
   const utils = trpc.useUtils();
 
   const { data: project, isLoading } = trpc.projects.get.useQuery(
@@ -49,15 +49,6 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
       utils.projects.list.invalidate();
     },
   });
-
-  useEffect(() => {
-    if (!project || isLoading) return;
-
-    const wiki = project.wiki as Wiki | null;
-    if (wiki) {
-      router.replace(`/projects/${projectId}/wiki/home`);
-    }
-  }, [project, isLoading, projectId, router]);
 
   if (isLoading) {
     return (
@@ -116,7 +107,7 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
             ) : (
               <>
                 <RefreshCw className="size-4" />
-                Retry Analysis
+                Retry
               </>
             )}
           </Button>
@@ -125,9 +116,28 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
     );
   }
 
+  const wiki = project.wiki as Wiki | null;
+
+  if (!wiki) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <div className="text-muted-foreground">Wiki data is missing</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <Loader2 className="size-6 animate-spin text-muted-foreground" />
-    </div>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <WikiBreadcrumbs sectionName="Wiki" pageName={wiki.home.title} />
+      </header>
+      <div className="flex flex-1 flex-col p-6">
+        <WikiContent
+          content={wiki.home.content}
+          projectId={projectId}
+          currentSectionSlug="home"
+        />
+      </div>
+    </>
   );
 }

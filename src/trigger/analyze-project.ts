@@ -14,9 +14,6 @@ export const analyzeProjectTask = task({
 
     const agent = mastra.getAgent("projectAnalyzerAgent");
 
-    logger.error("Analyzing project");
-    logger.error(repositoryUrl);
-
     const response = await agent.generate(
       `Analyze the GitHub repository at ${repositoryUrl} and return a complete ProjectAnalysis.`,
       {
