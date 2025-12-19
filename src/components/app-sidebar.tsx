@@ -1,16 +1,20 @@
-import { GalleryVerticalEnd, Minus, Plus } from "lucide-react"
-import type * as React from "react"
+"use client";
 
-import { SearchForm } from "@/components/search-form"
+import { Minus, Plus } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import type * as React from "react";
+import { ProjectSwitcher } from "@/components/project-switcher";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -19,200 +23,112 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { VersionSwitcher } from "./version-switcher"
+} from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { trpc } from "@/trpc/client";
+import type { Wiki } from "@/schemas/wiki";
 
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Building Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
-        },
-      ],
-    },
-  ],
+interface Project {
+  id: string | null;
+  name: string | null;
+  url: string;
+  status: "pending" | "analyzing" | "generating-wiki" | "completed" | "failed";
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  projects: Project[];
+}
+
+export function AppSidebar({ projects, ...props }: AppSidebarProps) {
+  const params = useParams();
+  const projectId = params.projectId as string | undefined;
+  const sectionSlug = params.sectionSlug as string | undefined;
+  const pageSlug = params.pageSlug as string | undefined;
+
+  const { data: currentProject } = trpc.projects.get.useQuery(
+    { id: projectId ?? "" },
+    { enabled: !!projectId }
+  );
+
+  const wiki = currentProject?.wiki as Wiki | null;
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
-          versions={["1.0.0", "1.1.0", "1.2.0"]}
-          defaultVersion="1.0.0"
+        <ProjectSwitcher
+          projects={projects}
+          currentProject={
+            currentProject
+              ? {
+                  id: currentProject.id,
+                  name: currentProject.name,
+                  wiki: wiki,
+                }
+              : undefined
+          }
         />
-        <SearchForm />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            {data.navMain.map((item, index) => (
-              <Collapsible
-                key={item.title}
-                defaultOpen={index === 1}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>
-                      {item.title}{" "}
-                      <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                      <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  {item.items?.length ? (
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items.map((item) => (
-                          <SidebarMenuSubItem key={item.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={item.isActive}
-                            >
-                              <a href={item.url}>{item.title}</a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  ) : null}
-                </SidebarMenuItem>
-              </Collapsible>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+        {wiki && (
+          <SidebarGroup>
+            <SidebarGroupLabel>TABLE OF CONTENTS</SidebarGroupLabel>
+            <SidebarMenu>
+              {wiki.sections.map((section, index) => (
+                <Collapsible
+                  key={section.slug}
+                  defaultOpen={section.slug === sectionSlug || index === 0}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton>
+                        {section.name}
+                        <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
+                        <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    {section.pages.length > 0 && (
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {section.pages.map((page) => (
+                            <SidebarMenuSubItem key={page.slug}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    isActive={
+                                      section.slug === sectionSlug &&
+                                      page.slug === pageSlug
+                                    }
+                                  >
+                                    <Link
+                                      href={`/projects/${projectId}/wiki/${section.slug}/${page.slug}`}
+                                    >
+                                      <span>{page.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </TooltipTrigger>
+                                <TooltipContent side="right">
+                                  {page.title}
+                                </TooltipContent>
+                              </Tooltip>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    )}
+                  </SidebarMenuItem>
+                </Collapsible>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

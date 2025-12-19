@@ -1,53 +1,82 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { CreateProjectDialog } from "@/components/create-project-dialog";
+import { EmptyState } from "@/components/empty-state";
+import { trpc } from "@/trpc/client";
 
 export default function Home() {
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+  const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: projects, isLoading } = trpc.projects.list.useQuery(undefined, {
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      const hasPending = data?.some(
+        (p) =>
+          p.status === "pending" ||
+          p.status === "analyzing" ||
+          p.status === "generating-wiki"
+      );
+      return hasPending ? 1000 : 10000;
+    },
+  });
+
+  // If there's a completed project, redirect to it
+  useEffect(() => {
+    if (!projects || isLoading) return;
+
+    const completedProject = projects.find((p) => p.status === "completed");
+    if (completedProject?.id) {
+      router.push(`/projects/${completedProject.id}/wiki`);
+    }
+  }, [projects, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show empty state if no projects
+  if (!projects || projects.length === 0) {
+    return (
+      <>
+        <EmptyState onCreateProject={() => setDialogOpen(true)} />
+        <CreateProjectDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      </>
+    );
+  }
+
+  // If we have projects but none completed, show a waiting state
+  const hasPending = projects.some(
+    (p) =>
+      p.status === "pending" ||
+      p.status === "analyzing" ||
+      p.status === "generating-wiki"
+  );
+
+  if (hasPending) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <div className="animate-pulse text-muted-foreground">
+          Generating wiki documentation...
         </div>
-      </SidebarInset>
-    </SidebarProvider>
-  )
+        <p className="text-sm text-muted-foreground">
+          This may take a few minutes
+        </p>
+      </div>
+    );
+  }
+
+  // Fallback - shouldn't reach here normally
+  return (
+    <>
+      <EmptyState onCreateProject={() => setDialogOpen(true)} />
+      <CreateProjectDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+    </>
+  );
 }

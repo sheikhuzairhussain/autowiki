@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -122,4 +124,16 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Remove decorative backticks from inline code in prose */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/* Remove decorative quotes from blockquotes in prose */
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: none;
 }
