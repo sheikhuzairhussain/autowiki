@@ -20,6 +20,7 @@ import {
   createProjectSchema,
 } from "@/schemas/project";
 import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
 
 function extractRepoName(url: string): string {
   try {
@@ -83,9 +84,17 @@ export function CreateProjectDialog({
       utils.projects.list.invalidate();
       reset();
       onOpenChange(false);
+      toast.success("Project created", {
+        description: "Wiki generation has started in the background.",
+      });
       if (project.id) {
         router.push(`/projects/${project.id}/wiki`);
       }
+    },
+    onError: (error) => {
+      toast.error("Failed to create project", {
+        description: error.message,
+      });
     },
   });
 

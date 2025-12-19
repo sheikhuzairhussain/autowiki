@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, type ComponentPropsWithoutRef } from "react";
+import { type ComponentPropsWithoutRef, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -13,6 +13,10 @@ interface WikiContentProps {
 
 function isExternalLink(href: string): boolean {
   return href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:");
+}
+
+function isAnchorLink(href: string): boolean {
+  return href.startsWith("#");
 }
 
 // Convert [[page-name]] wiki-style links to standard markdown links
@@ -61,6 +65,16 @@ export function WikiContent({ content, projectId, currentSectionSlug }: WikiCont
               return <span {...props}>{children}</span>;
             }
 
+            // Anchor links (footnotes, headings) - keep as regular anchor
+            if (isAnchorLink(href)) {
+              return (
+                <a href={href} {...props}>
+                  {children}
+                </a>
+              );
+            }
+
+            // External links - open in new tab
             if (isExternalLink(href)) {
               return (
                 <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
@@ -69,10 +83,48 @@ export function WikiContent({ content, projectId, currentSectionSlug }: WikiCont
               );
             }
 
+            // Internal wiki links - use Next.js Link
             return (
               <Link href={resolveWikiLink(href)} {...props}>
                 {children}
               </Link>
+            );
+          },
+          // Style footnote section - hide the default "Footnotes" heading
+          section: ({
+            className,
+            children,
+            ...props
+          }: ComponentPropsWithoutRef<"section"> & { "data-footnotes"?: boolean }) => {
+            const isFootnotes = className?.includes("footnotes") || props["data-footnotes"];
+            if (isFootnotes) {
+              return (
+                <section
+                  className="border-t border-border pt-4 mt-8 not-prose"
+                  {...props}
+                >
+                  <h3 className="text-sm font-medium mb-3 text-foreground">References</h3>
+                  <div className="text-sm [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_a[data-footnote-backref]]:hidden">
+                    {children}
+                  </div>
+                </section>
+              );
+            }
+            return (
+              <section className={className} {...props}>
+                {children}
+              </section>
+            );
+          },
+          // Hide the auto-generated "Footnotes" h2 heading
+          h2: ({ children, id, ...props }: ComponentPropsWithoutRef<"h2">) => {
+            if (id === "footnote-label") {
+              return null;
+            }
+            return (
+              <h2 id={id} {...props}>
+                {children}
+              </h2>
             );
           },
         }}
