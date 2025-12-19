@@ -66,7 +66,7 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -131,9 +131,7 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      <div className="animate-pulse text-muted-foreground">
-        Loading wiki...
-      </div>
+      <Loader2 className="size-6 animate-spin text-muted-foreground" />
     </div>
   );
 }

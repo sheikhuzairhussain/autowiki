@@ -57,7 +57,7 @@ export default function WikiPage({ params }: WikiPageProps) {
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
   }

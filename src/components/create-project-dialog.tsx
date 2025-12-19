@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  createProjectSchema,
   type CreateProjectInput,
+  createProjectSchema,
 } from "@/schemas/project";
 import { trpc } from "@/trpc/client";
 
@@ -45,6 +46,7 @@ export function CreateProjectDialog({
   open,
   onOpenChange,
 }: CreateProjectDialogProps) {
+  const router = useRouter();
   const utils = trpc.useUtils();
   const prevUrlRef = useRef("");
 
@@ -77,10 +79,13 @@ export function CreateProjectDialog({
   }, [url, setValue]);
 
   const createProject = trpc.projects.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (project) => {
       utils.projects.list.invalidate();
       reset();
       onOpenChange(false);
+      if (project.id) {
+        router.push(`/projects/${project.id}/wiki`);
+      }
     },
   });
 

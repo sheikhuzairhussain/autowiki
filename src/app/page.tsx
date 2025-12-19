@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { trpc } from "@/trpc/client";
@@ -10,33 +11,22 @@ export default function Home() {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: projects, isLoading } = trpc.projects.list.useQuery(undefined, {
-    refetchInterval: (query) => {
-      const data = query.state.data;
-      const hasPending = data?.some(
-        (p) =>
-          p.status === "pending" ||
-          p.status === "analyzing" ||
-          p.status === "generating-wiki"
-      );
-      return hasPending ? 1000 : 10000;
-    },
-  });
+  const { data: projects, isLoading } = trpc.projects.list.useQuery();
 
-  // If there's a completed project, redirect to it
+  // If there are any projects, redirect to the first one (most recent)
   useEffect(() => {
     if (!projects || isLoading) return;
 
-    const completedProject = projects.find((p) => p.status === "completed");
-    if (completedProject?.id) {
-      router.push(`/projects/${completedProject.id}/wiki`);
+    const firstProject = projects[0];
+    if (firstProject?.id) {
+      router.push(`/projects/${firstProject.id}/wiki`);
     }
   }, [projects, isLoading, router]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -51,32 +41,10 @@ export default function Home() {
     );
   }
 
-  // If we have projects but none completed, show a waiting state
-  const hasPending = projects.some(
-    (p) =>
-      p.status === "pending" ||
-      p.status === "analyzing" ||
-      p.status === "generating-wiki"
-  );
-
-  if (hasPending) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <div className="animate-pulse text-muted-foreground">
-          Generating wiki documentation...
-        </div>
-        <p className="text-sm text-muted-foreground">
-          This may take a few minutes
-        </p>
-      </div>
-    );
-  }
-
-  // Fallback - shouldn't reach here normally
+  // Redirecting to project...
   return (
-    <>
-      <EmptyState onCreateProject={() => setDialogOpen(true)} />
-      <CreateProjectDialog open={dialogOpen} onOpenChange={setDialogOpen} />
-    </>
+    <div className="flex min-h-screen items-center justify-center">
+      <Loader2 className="size-6 animate-spin text-muted-foreground" />
+    </div>
   );
 }

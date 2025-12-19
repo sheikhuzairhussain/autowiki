@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Autowiki",
+  title: "AutoWiki",
   description: "Auto-generated wiki documentation for your projects",
 };
 
