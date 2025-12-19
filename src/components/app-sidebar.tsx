@@ -8,6 +8,7 @@ import { ProjectSwitcher } from "@/components/project-switcher";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
@@ -140,6 +141,19 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
           </>
         )}
       </SidebarContent>
+      <SidebarFooter>
+        <p className="px-2 py-3 text-center text-xs text-muted-foreground/60">
+          © 2025{" "}
+          <a
+            href="https://www.linkedin.com/in/sheikhuzairhussain"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-muted-foreground"
+          >
+            Sheikh Uzair Hussain
+          </a>
+        </p>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
