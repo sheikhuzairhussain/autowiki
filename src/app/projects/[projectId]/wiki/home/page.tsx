@@ -3,6 +3,7 @@
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
+import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import { WikiContent } from "@/components/wiki-content";
 import type { Wiki } from "@/schemas/wiki";
@@ -36,7 +37,7 @@ export default function WikiHomePage({ params }: WikiHomePageProps) {
           status === "analyzing" ||
           status === "generating-wiki"
         ) {
-          return 1000;
+          return POLLING_INTERVAL_ACTIVE;
         }
         return false;
       },

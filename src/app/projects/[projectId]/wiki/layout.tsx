@@ -6,6 +6,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
+import { POLLING_INTERVAL_ACTIVE, POLLING_INTERVAL_IDLE } from "@/lib/constants";
 import { trpc } from "@/trpc/client";
 
 interface WikiLayoutProps {
@@ -23,7 +24,7 @@ export default function WikiLayout({ children }: WikiLayoutProps) {
           p.status === "analyzing" ||
           p.status === "generating-wiki"
       );
-      return hasPending ? 1000 : 10000;
+      return hasPending ? POLLING_INTERVAL_ACTIVE : POLLING_INTERVAL_IDLE;
     },
   });
 

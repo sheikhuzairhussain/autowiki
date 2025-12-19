@@ -4,6 +4,7 @@ import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { POLLING_INTERVAL_ACTIVE } from "@/lib/constants";
 import { trpc } from "@/trpc/client";
 import type { Wiki } from "@/schemas/wiki";
 
@@ -36,7 +37,7 @@ export default function WikiRedirectPage({ params }: WikiRedirectPageProps) {
           status === "analyzing" ||
           status === "generating-wiki"
         ) {
-          return 1000;
+          return POLLING_INTERVAL_ACTIVE;
         }
         return false;
       },
