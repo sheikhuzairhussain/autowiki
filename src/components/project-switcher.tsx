@@ -16,17 +16,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import type { ProjectListItem, ProjectStatus } from "@/schemas/project";
 import type { Wiki } from "@/schemas/wiki";
 
-interface Project {
-  id: string | null;
-  name: string | null;
-  url: string;
-  status: "pending" | "analyzing" | "generating-wiki" | "completed" | "failed";
-}
-
 interface ProjectSwitcherProps {
-  projects: Project[];
+  projects: ProjectListItem[];
   currentProject?: {
     id: string | null;
     name: string | null;
@@ -35,7 +29,7 @@ interface ProjectSwitcherProps {
   };
 }
 
-function StatusDot({ status }: { status: Project["status"] }) {
+function StatusDot({ status }: { status: ProjectStatus }) {
   if (status === "completed") return null;
 
   const colors = {
@@ -61,7 +55,7 @@ export function ProjectSwitcher({
   const params = useParams();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleProjectSelect = (project: Project) => {
+  const handleProjectSelect = (project: ProjectListItem) => {
     if (!project.id) return;
     router.push(`/projects/${project.id}/wiki`);
   };
@@ -94,9 +88,9 @@ export function ProjectSwitcher({
               className="w-(--radix-dropdown-menu-trigger-width)"
               align="start"
             >
-              {projects.map((project) => (
+              {projects.map((project, index) => (
                 <DropdownMenuItem
-                  key={project.id}
+                  key={project.id ?? `project-${index}`}
                   onSelect={() => handleProjectSelect(project)}
                   className="flex items-start gap-3 py-2"
                 >

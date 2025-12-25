@@ -40,3 +40,19 @@ export const Wiki = z
   })
   .describe("Complete wiki structure with nested markdown pages");
 export type Wiki = z.infer<typeof Wiki>;
+
+/**
+ * Type guard to safely check if a value is a valid Wiki object.
+ * Uses Zod's safeParse for runtime validation.
+ */
+export function isWiki(value: unknown): value is Wiki {
+  return Wiki.safeParse(value).success;
+}
+
+/**
+ * Safely parse a value as Wiki, returning null if invalid.
+ */
+export function parseWiki(value: unknown): Wiki | null {
+  const result = Wiki.safeParse(value);
+  return result.success ? result.data : null;
+}

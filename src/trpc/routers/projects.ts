@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { projects } from "@/db/schema";
@@ -33,7 +33,8 @@ export const projectsRouter = createTRPCRouter({
         url: projects.url,
         status: projects.status,
       })
-      .from(projects);
+      .from(projects)
+      .orderBy(desc(projects.createdAt));
 
     return result;
   }),

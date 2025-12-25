@@ -79,6 +79,14 @@ export function CreateProjectDialog({
     }
   }, [url, setValue]);
 
+  // Reset form when dialog closes
+  useEffect(() => {
+    if (!open) {
+      reset();
+      prevUrlRef.current = "";
+    }
+  }, [open, reset]);
+
   const createProject = trpc.projects.create.useMutation({
     onSuccess: (project) => {
       utils.projects.list.invalidate();

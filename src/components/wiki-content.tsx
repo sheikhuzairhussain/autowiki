@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type ComponentPropsWithoutRef, useMemo } from "react";
+import { type ComponentPropsWithoutRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -42,29 +42,32 @@ export function WikiContent({
 }: WikiContentProps) {
   const processedContent = useMemo(() => convertWikiLinks(content), [content]);
 
-  const resolveWikiLink = (href: string): string => {
-    if (isExternalLink(href)) {
-      return href;
-    }
+  const resolveWikiLink = useCallback(
+    (href: string): string => {
+      if (isExternalLink(href)) {
+        return href;
+      }
 
-    // Remove leading ./ if present
-    let cleanHref = href.replace(/^\.\//, "");
+      // Remove leading ./ if present
+      let cleanHref = href.replace(/^\.\//, "");
 
-    // Handle ../ for going up to different section
-    if (cleanHref.startsWith("../")) {
-      cleanHref = cleanHref.replace(/^\.\.\//, "");
-      // cleanHref should now be "section/page"
-      return `/projects/${projectId}/wiki/${cleanHref}`;
-    }
+      // Handle ../ for going up to different section
+      if (cleanHref.startsWith("../")) {
+        cleanHref = cleanHref.replace(/^\.\.\//, "");
+        // cleanHref should now be "section/page"
+        return `/projects/${projectId}/wiki/${cleanHref}`;
+      }
 
-    // If it contains a slash, treat as section/page
-    if (cleanHref.includes("/")) {
-      return `/projects/${projectId}/wiki/${cleanHref}`;
-    }
+      // If it contains a slash, treat as section/page
+      if (cleanHref.includes("/")) {
+        return `/projects/${projectId}/wiki/${cleanHref}`;
+      }
 
-    // Otherwise, it's a page in the current section
-    return `/projects/${projectId}/wiki/${currentSectionSlug}/${cleanHref}`;
-  };
+      // Otherwise, it's a page in the current section
+      return `/projects/${projectId}/wiki/${currentSectionSlug}/${cleanHref}`;
+    },
+    [projectId, currentSectionSlug],
+  );
 
   return (
     <article className="prose prose-sm prose-neutral dark:prose-invert max-w-none">

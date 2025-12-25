@@ -14,7 +14,7 @@ import {
   POLLING_INTERVAL_ACTIVE,
   POLLING_INTERVAL_IDLE,
 } from "@/lib/constants";
-import type { Wiki } from "@/schemas/wiki";
+import { parseWiki } from "@/schemas/wiki";
 import { trpc } from "@/trpc/client";
 
 interface WikiLayoutProps {
@@ -47,7 +47,7 @@ export default function WikiLayout({ children }: WikiLayoutProps) {
     { enabled: !!projectId },
   );
 
-  const wiki = currentProject?.wiki as Wiki | null;
+  const wiki = parseWiki(currentProject?.wiki);
 
   // Determine breadcrumb values
   let sectionName = "Wiki";

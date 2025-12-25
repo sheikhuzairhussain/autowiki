@@ -25,18 +25,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { Wiki } from "@/schemas/wiki";
+import type { ProjectListItem } from "@/schemas/project";
+import { parseWiki } from "@/schemas/wiki";
 import { trpc } from "@/trpc/client";
 
-interface Project {
-  id: string | null;
-  name: string | null;
-  url: string;
-  status: "pending" | "analyzing" | "generating-wiki" | "completed" | "failed";
-}
-
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  projects: Project[];
+  projects: ProjectListItem[];
 }
 
 export function AppSidebar({ projects, ...props }: AppSidebarProps) {
@@ -50,7 +44,7 @@ export function AppSidebar({ projects, ...props }: AppSidebarProps) {
     { enabled: !!projectId },
   );
 
-  const wiki = currentProject?.wiki as Wiki | null;
+  const wiki = parseWiki(currentProject?.wiki);
 
   return (
     <Sidebar {...props}>

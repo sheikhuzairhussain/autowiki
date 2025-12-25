@@ -11,3 +11,23 @@ export const createProjectSchema = z.object({
 });
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+
+/**
+ * Project status enum matching the database schema
+ */
+export type ProjectStatus =
+  | "pending"
+  | "analyzing"
+  | "generating-wiki"
+  | "completed"
+  | "failed";
+
+/**
+ * Project list item returned from the projects.list query
+ */
+export interface ProjectListItem {
+  id: string | null;
+  name: string | null;
+  url: string;
+  status: ProjectStatus;
+}
