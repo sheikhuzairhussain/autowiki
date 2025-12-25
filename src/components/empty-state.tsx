@@ -23,12 +23,15 @@ export function EmptyState({ onCreateProject }: EmptyStateProps) {
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground">
                 <Book className="h-4.5 w-4.5 text-background" />
               </div>
-              <h1 className="text-2xl font-semibold tracking-tight">AutoWiki</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                AutoWiki
+              </h1>
             </div>
 
             {/* Description */}
             <p className="text-sm text-muted-foreground leading-relaxed">
-              AI-powered documentation generator for your codebase. Connect a GitHub repository and get a comprehensive wiki in minutes.
+              AI-powered documentation generator for your codebase. Connect a
+              GitHub repository and get a comprehensive wiki in minutes.
             </p>
 
             {/* How it works */}
@@ -40,7 +43,9 @@ export function EmptyState({ onCreateProject }: EmptyStateProps) {
                   </div>
                   <div>
                     <p className="text-sm font-medium">Connect your repo</p>
-                    <p className="text-xs text-muted-foreground">Paste any public GitHub URL</p>
+                    <p className="text-xs text-muted-foreground">
+                      Paste any public GitHub URL
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -49,7 +54,9 @@ export function EmptyState({ onCreateProject }: EmptyStateProps) {
                   </div>
                   <div>
                     <p className="text-sm font-medium">AI analyzes your code</p>
-                    <p className="text-xs text-muted-foreground">Understands structure & patterns</p>
+                    <p className="text-xs text-muted-foreground">
+                      Understands structure & patterns
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -58,7 +65,9 @@ export function EmptyState({ onCreateProject }: EmptyStateProps) {
                   </div>
                   <div>
                     <p className="text-sm font-medium">Get your wiki</p>
-                    <p className="text-xs text-muted-foreground">Auto-generated documentation</p>
+                    <p className="text-xs text-muted-foreground">
+                      Auto-generated documentation
+                    </p>
                   </div>
                 </div>
               </div>

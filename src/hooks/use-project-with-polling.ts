@@ -53,4 +53,3 @@ export function useProjectWithPolling(projectId: string) {
     isRetrying: retryMutation.isPending,
   };
 }
-

@@ -90,7 +90,7 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   // biome-ignore lint/correctness/useExhaustiveDependencies: setOpenMobile is not used in the context value
-    const toggleSidebar = React.useCallback(() => {
+  const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
   }, [isMobile, setOpen, setOpenMobile]);
 
