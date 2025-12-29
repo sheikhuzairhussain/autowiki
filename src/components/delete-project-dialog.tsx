@@ -33,7 +33,11 @@ export function DeleteProjectDialog({
 
   const deleteProject = trpc.projects.delete.useMutation({
     onSuccess: () => {
-      utils.projects.list.invalidate();
+      // Remove the deleted project from the cache
+      utils.projects.list.setData(undefined, (oldData) =>
+        oldData?.filter((p) => p.id !== project.id),
+      );
+      utils.projects.get.invalidate({ id: project.id });
       onOpenChange(false);
       toast.success("Project deleted", {
         description: `"${project.name || "Unnamed Project"}" has been permanently deleted.`,
