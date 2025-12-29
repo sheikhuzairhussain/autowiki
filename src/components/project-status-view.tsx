@@ -68,8 +68,9 @@ export function ProjectStatusView({
       <div className="text-center">
         <p className="text-lg font-medium">{STATUS_MESSAGES[status]}</p>
         {isProcessing && (
-          <p className="text-sm text-muted-foreground">
-            This may take a few minutes
+          <p className="text-sm text-muted-foreground max-w-sm">
+            This may take a few minutes. Feel free to leave the page and come
+            back later.
           </p>
         )}
       </div>

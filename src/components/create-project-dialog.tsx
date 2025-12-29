@@ -21,6 +21,7 @@ import {
   createProjectSchema,
 } from "@/schemas/project";
 import { trpc } from "@/trpc/client";
+import { Loader2, Plus, WandSparkles } from "lucide-react";
 
 function extractRepoName(url: string): string {
   try {
@@ -155,7 +156,12 @@ export function CreateProjectDialog({
               type="submit"
               disabled={isSubmitting || createProject.isPending}
             >
-              {createProject.isPending ? "Creating..." : "Create project"}
+              {createProject.isPending ? (
+                <Loader2 className="h-4 w-4" />
+              ) : (
+                <WandSparkles className="h-4 w-4" />
+              )}
+              {createProject.isPending ? "Creating" : "Create project"}
             </Button>
           </DialogFooter>
         </form>
