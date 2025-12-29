@@ -63,21 +63,20 @@ For each feature you identify:
 - Include code examples where helpful
 
 ### Citations
-Every claim about the code MUST include a citation.
+Every claim about the code MUST include a citation. There are two citation types:
 
-**Line number rule: BOTH or NEITHER**
-- Provide **both** \`startLine\` and \`endLine\`, OR
-- Omit **both** (no line numbers at all)
-- **NEVER** provide only \`startLine\` without \`endLine\`
+**\`type: "range"\` (preferred)** — Reference specific lines:
+- Use for functions, classes, interfaces, config objects, schemas
+- Cite from definition to closing brace
+- Requires both \`startLine\` and \`endLine\`
+- Example: \`{ type: "range", file: "src/auth/session.ts", startLine: 45, endLine: 67, description: "validateSession function" }\`
 
-**When to include line numbers (preferred):**
-- Functions, classes, interfaces → cite from definition to closing brace
-- Config objects, schemas → cite the entire definition
-- Any specific code block you're referencing
+**\`type: "file"\`** — Reference entire file:
+- Use only when the entire file is relevant
+- No line numbers needed
+- Example: \`{ type: "file", file: "src/config/database.ts", description: "Database configuration" }\`
 
-Example: \`src/auth/session.ts\` lines 45-67 (the \`validateSession\` function)
-
-Line numbers help readers navigate directly to the relevant code in GitHub.
+**Prefer \`range\` citations** — they help readers navigate directly to the relevant code in GitHub.
 
 ### Feature Granularity
 **Aim for 10-20+ features for most projects.** More features = better documentation coverage.

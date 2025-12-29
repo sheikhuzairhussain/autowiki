@@ -90,16 +90,16 @@ Each feature becomes its own comprehensive wiki page containing:
 - Use horizontal rules to separate major sections
 
 #### Citations & Links
-- Use **inline links** for code references. Link directly to the GitHub file with line numbers:
+- Use **inline links** for code references. Link directly to the GitHub file:
   \`\`\`markdown
   The authentication logic in [\`session.ts\`](https://github.com/owner/repo/blob/{branch}/src/auth/session.ts#L45-L67) handles validation.
   \`\`\`
 - Use the repository URL and **branch** from the analysis to construct GitHub blob URLs
-- **Include line number anchors** when citations have line numbers:
-  - Single line: \`#L{startLine}\` (e.g., \`#L45\`)
-  - Line range: \`#L{startLine}-L{endLine}\` (e.g., \`#L45-L67\`)
-  - No line numbers: omit the anchor entirely
+- **Citations have two types:**
+  - \`type: "range"\` — has \`startLine\` and \`endLine\` → append \`#L{startLine}-L{endLine}\` to URL
+  - \`type: "file"\` — no line numbers → just use the file URL without anchor
 - Show just the filename (not full path) as the link text, wrapped in backticks for code styling
+- For \`lineRange\` objects in entry points and key files, use \`#L{lineRange.startLine}-L{lineRange.endLine}\`
 - Cross-reference related pages using wiki-style links with **section and page slugs**: \`[[section-slug/page-slug|Page Title]]\`
 - Always include the section slug in wiki links so they work from any page (including the home page)
 - Always use the display name (title) for wiki links, not the slug

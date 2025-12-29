@@ -5,8 +5,9 @@ export const Confidence = z
   .describe("How confident the AI is in this inference");
 export type Confidence = z.infer<typeof Confidence>;
 
-export const Citation = z
+export const FileCitation = z
   .object({
+    type: z.literal("file").describe("Citation type: file-level reference"),
     file: z
       .string()
       .describe(
@@ -15,33 +16,31 @@ export const Citation = z
     description: z
       .string()
       .describe("What this code does (for inline citation context)"),
-    startLine: z
-      .number()
-      .int()
-      .positive()
-      .optional()
-      .describe(
-        "Starting line number — provide BOTH startLine and endLine, or neither",
-      ),
-    endLine: z
-      .number()
-      .int()
-      .positive()
-      .optional()
-      .describe(
-        "Ending line number — provide BOTH startLine and endLine, or neither",
-      ),
   })
-  .refine(
-    (data) => {
-      const hasStart = data.startLine !== undefined;
-      const hasEnd = data.endLine !== undefined;
-      return hasStart === hasEnd; // both present or both absent
-    },
-    { message: "Must provide both startLine and endLine, or neither" },
-  )
+  .describe("A reference to an entire file without specific line numbers");
+export type FileCitation = z.infer<typeof FileCitation>;
+
+export const RangeCitation = z
+  .object({
+    type: z.literal("range").describe("Citation type: line range reference"),
+    file: z
+      .string()
+      .describe(
+        "File path relative to repository root (e.g., src/components/Button.tsx)",
+      ),
+    description: z
+      .string()
+      .describe("What this code does (for inline citation context)"),
+    startLine: z.number().int().positive().describe("Starting line number"),
+    endLine: z.number().int().positive().describe("Ending line number"),
+  })
+  .describe("A reference to a specific line range within a file");
+export type RangeCitation = z.infer<typeof RangeCitation>;
+
+export const Citation = z
+  .discriminatedUnion("type", [FileCitation, RangeCitation])
   .describe(
-    "A reference to a specific file and line range. Provide BOTH startLine and endLine, or omit both.",
+    "A code reference. Use 'file' for entire file references, 'range' for specific line ranges (preferred).",
   );
 export type Citation = z.infer<typeof Citation>;
 
@@ -64,6 +63,14 @@ export const UserFlow = z
   .describe("A user flow — what a user is trying to do and how it works");
 export type UserFlow = z.infer<typeof UserFlow>;
 
+export const LineRange = z
+  .object({
+    startLine: z.number().int().positive().describe("Starting line number"),
+    endLine: z.number().int().positive().describe("Ending line number"),
+  })
+  .describe("A line range within a file");
+export type LineRange = z.infer<typeof LineRange>;
+
 export const EntryPoint = z
   .object({
     name: z.string().describe("Name or identifier"),
@@ -75,34 +82,11 @@ export const EntryPoint = z
     description: z.string().describe("What it does"),
     example: z.string().optional().describe("Usage example"),
     file: z.string().describe("File path where it's defined"),
-    startLine: z
-      .number()
-      .int()
-      .positive()
-      .optional()
-      .describe(
-        "Starting line number — provide BOTH startLine and endLine, or neither",
-      ),
-    endLine: z
-      .number()
-      .int()
-      .positive()
-      .optional()
-      .describe(
-        "Ending line number — provide BOTH startLine and endLine, or neither",
-      ),
+    lineRange: LineRange.optional().describe(
+      "Line range where the entry point is defined (recommended)",
+    ),
   })
-  .refine(
-    (data) => {
-      const hasStart = data.startLine !== undefined;
-      const hasEnd = data.endLine !== undefined;
-      return hasStart === hasEnd;
-    },
-    { message: "Must provide both startLine and endLine, or neither" },
-  )
-  .describe(
-    "An entry point or interface. Provide BOTH startLine and endLine, or omit both.",
-  );
+  .describe("An entry point or interface that users/developers interact with");
 export type EntryPoint = z.infer<typeof EntryPoint>;
 
 export const Feature = z
@@ -136,39 +120,15 @@ export const Feature = z
       .describe("Public entry points for this feature"),
     keyFiles: z
       .array(
-        z
-          .object({
-            path: z.string().describe("File path relative to repository root"),
-            purpose: z.string().describe("What this file does for the feature"),
-            startLine: z
-              .number()
-              .int()
-              .positive()
-              .optional()
-              .describe(
-                "Starting line number — provide BOTH startLine and endLine, or neither",
-              ),
-            endLine: z
-              .number()
-              .int()
-              .positive()
-              .optional()
-              .describe(
-                "Ending line number — provide BOTH startLine and endLine, or neither",
-              ),
-          })
-          .refine(
-            (data) => {
-              const hasStart = data.startLine !== undefined;
-              const hasEnd = data.endLine !== undefined;
-              return hasStart === hasEnd;
-            },
-            { message: "Must provide both startLine and endLine, or neither" },
+        z.object({
+          path: z.string().describe("File path relative to repository root"),
+          purpose: z.string().describe("What this file does for the feature"),
+          lineRange: LineRange.optional().describe(
+            "Line range of the relevant code section (recommended)",
           ),
+        }),
       )
-      .describe(
-        "Key files that implement this feature. Provide BOTH startLine and endLine, or omit both.",
-      ),
+      .describe("Key files that implement this feature"),
     citations: z
       .array(Citation)
       .describe("Code references to include as inline citations in the wiki"),
