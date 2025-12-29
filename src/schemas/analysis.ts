@@ -15,8 +15,20 @@ export const Citation = z
     description: z
       .string()
       .describe("What this code does (for inline citation context)"),
+    startLine: z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe("Starting line number of the referenced code"),
+    endLine: z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe("Ending line number for code ranges (optional)"),
   })
-  .describe("A reference to a specific file in the codebase");
+  .describe("A reference to a specific file and line range in the codebase");
 export type Citation = z.infer<typeof Citation>;
 
 export const UserFlow = z
@@ -49,6 +61,12 @@ export const EntryPoint = z
     description: z.string().describe("What it does"),
     example: z.string().optional().describe("Usage example"),
     file: z.string().describe("File path where it's defined"),
+    startLine: z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe("Line number where the entry point is defined"),
   })
   .describe("An entry point or interface that users/developers interact with");
 export type EntryPoint = z.infer<typeof EntryPoint>;
@@ -87,6 +105,18 @@ export const Feature = z
         z.object({
           path: z.string().describe("File path relative to repository root"),
           purpose: z.string().describe("What this file does for the feature"),
+          startLine: z
+            .number()
+            .int()
+            .positive()
+            .optional()
+            .describe("Starting line number of the relevant code section"),
+          endLine: z
+            .number()
+            .int()
+            .positive()
+            .optional()
+            .describe("Ending line number for code ranges (optional)"),
         }),
       )
       .describe("Key files that implement this feature"),

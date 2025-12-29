@@ -1,14 +1,4 @@
 {
-  "name": "autowiki",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
-  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@mastra/ai-sdk": "^1.0.0-beta.10",
@@ -28,7 +18,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.90.12",
-    "@trigger.dev/sdk": "4.3.0",
+    "@trigger.dev/sdk": "4.3.1",
     "@trpc/client": "^11.8.0",
     "@trpc/react-query": "^11.8.0",
     "@trpc/server": "^11.8.0",
@@ -47,6 +37,7 @@
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "server-only": "^0.0.1",
+    "simple-git": "^3.30.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "zod": "3"
@@ -54,7 +45,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@tailwindcss/postcss": "^4",
-    "@trigger.dev/build": "4.3.0",
+    "@trigger.dev/build": "4.3.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -68,8 +59,18 @@
     "sharp",
     "unrs-resolver"
   ],
+  "name": "autowiki",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "format": "biome format --write",
+    "lint": "biome check",
+    "start": "next start"
+  },
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "version": "0.1.0"
 }
