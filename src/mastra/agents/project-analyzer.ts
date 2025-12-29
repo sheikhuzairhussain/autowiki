@@ -63,21 +63,21 @@ For each feature you identify:
 - Include code examples where helpful
 
 ### Citations
-Every claim about the code MUST include a citation with **both startLine and endLine**.
+Every claim about the code MUST include a citation.
 
-**ALWAYS provide line ranges** — most code spans multiple lines:
+**Line number rule: BOTH or NEITHER**
+- Provide **both** \`startLine\` and \`endLine\`, OR
+- Omit **both** (no line numbers at all)
+- **NEVER** provide only \`startLine\` without \`endLine\`
+
+**When to include line numbers (preferred):**
 - Functions, classes, interfaces → cite from definition to closing brace
 - Config objects, schemas → cite the entire definition
-- Imports, exports → cite the line(s) they appear on
-
-**Only use startLine alone** when citing a true single-line reference (rare):
-- A single import statement
-- A one-line type alias
-- A single export
+- Any specific code block you're referencing
 
 Example: \`src/auth/session.ts\` lines 45-67 (the \`validateSession\` function)
 
-Line numbers help readers navigate directly to the relevant code in GitHub. When in doubt, include both startLine and endLine.
+Line numbers help readers navigate directly to the relevant code in GitHub.
 
 ### Feature Granularity
 **Aim for 10-20+ features for most projects.** More features = better documentation coverage.

@@ -20,15 +20,29 @@ export const Citation = z
       .int()
       .positive()
       .optional()
-      .describe("Starting line number of the referenced code"),
+      .describe(
+        "Starting line number — provide BOTH startLine and endLine, or neither",
+      ),
     endLine: z
       .number()
       .int()
       .positive()
       .optional()
-      .describe("Ending line number for code ranges (optional)"),
+      .describe(
+        "Ending line number — provide BOTH startLine and endLine, or neither",
+      ),
   })
-  .describe("A reference to a specific file and line range in the codebase");
+  .refine(
+    (data) => {
+      const hasStart = data.startLine !== undefined;
+      const hasEnd = data.endLine !== undefined;
+      return hasStart === hasEnd; // both present or both absent
+    },
+    { message: "Must provide both startLine and endLine, or neither" },
+  )
+  .describe(
+    "A reference to a specific file and line range. Provide BOTH startLine and endLine, or omit both.",
+  );
 export type Citation = z.infer<typeof Citation>;
 
 export const UserFlow = z
@@ -66,9 +80,29 @@ export const EntryPoint = z
       .int()
       .positive()
       .optional()
-      .describe("Line number where the entry point is defined"),
+      .describe(
+        "Starting line number — provide BOTH startLine and endLine, or neither",
+      ),
+    endLine: z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe(
+        "Ending line number — provide BOTH startLine and endLine, or neither",
+      ),
   })
-  .describe("An entry point or interface that users/developers interact with");
+  .refine(
+    (data) => {
+      const hasStart = data.startLine !== undefined;
+      const hasEnd = data.endLine !== undefined;
+      return hasStart === hasEnd;
+    },
+    { message: "Must provide both startLine and endLine, or neither" },
+  )
+  .describe(
+    "An entry point or interface. Provide BOTH startLine and endLine, or omit both.",
+  );
 export type EntryPoint = z.infer<typeof EntryPoint>;
 
 export const Feature = z
@@ -102,24 +136,39 @@ export const Feature = z
       .describe("Public entry points for this feature"),
     keyFiles: z
       .array(
-        z.object({
-          path: z.string().describe("File path relative to repository root"),
-          purpose: z.string().describe("What this file does for the feature"),
-          startLine: z
-            .number()
-            .int()
-            .positive()
-            .optional()
-            .describe("Starting line number of the relevant code section"),
-          endLine: z
-            .number()
-            .int()
-            .positive()
-            .optional()
-            .describe("Ending line number for code ranges (optional)"),
-        }),
+        z
+          .object({
+            path: z.string().describe("File path relative to repository root"),
+            purpose: z.string().describe("What this file does for the feature"),
+            startLine: z
+              .number()
+              .int()
+              .positive()
+              .optional()
+              .describe(
+                "Starting line number — provide BOTH startLine and endLine, or neither",
+              ),
+            endLine: z
+              .number()
+              .int()
+              .positive()
+              .optional()
+              .describe(
+                "Ending line number — provide BOTH startLine and endLine, or neither",
+              ),
+          })
+          .refine(
+            (data) => {
+              const hasStart = data.startLine !== undefined;
+              const hasEnd = data.endLine !== undefined;
+              return hasStart === hasEnd;
+            },
+            { message: "Must provide both startLine and endLine, or neither" },
+          ),
       )
-      .describe("Key files that implement this feature"),
+      .describe(
+        "Key files that implement this feature. Provide BOTH startLine and endLine, or omit both.",
+      ),
     citations: z
       .array(Citation)
       .describe("Code references to include as inline citations in the wiki"),
