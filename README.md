@@ -30,7 +30,7 @@ AutoWiki uses two specialized AI agents:
 
 ### Project Analyzer Agent
 
-Analyzes GitHub repositories using the GitHub MCP server to:
+Clones repositories locally and uses custom filesystem tools to:
 
 - Understand project structure and architecture
 - Identify features and their implementations
@@ -46,6 +46,43 @@ Transforms the analysis into documentation:
 - Adds cross-references between related pages
 - Links directly to source files on GitHub
 
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant NextJS as Next.js App
+    participant Trigger as Trigger.dev
+    participant Git as simple-git
+    participant Analyzer as Project Analyzer Agent
+    participant Generator as Wiki Generator Agent
+    participant DB as PostgreSQL
+
+    User->>NextJS: Submit repository URL
+    NextJS->>DB: Create project (status: pending)
+    NextJS->>Trigger: Trigger generateWikiTask
+
+    Trigger->>DB: Update status: analyzing
+    Trigger->>Git: Clone repository (shallow)
+    Git-->>Trigger: Cloned to temp directory
+
+    Trigger->>Analyzer: Analyze with filesystem tools
+    Note over Analyzer: Uses directory_tree, read_files,<br/>search_glob, search_regex, etc.
+    Analyzer-->>Trigger: ProjectAnalysis
+
+    Trigger->>DB: Save analysis, status: generating-wiki
+
+    Trigger->>Generator: Generate wiki from analysis
+    Generator-->>Trigger: Wiki pages
+
+    Trigger->>DB: Save wiki, status: completed
+    Trigger->>Git: Cleanup temp directory
+
+    User->>NextJS: View generated wiki
+    NextJS->>DB: Fetch wiki content
+    NextJS-->>User: Render wiki pages
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -54,7 +91,6 @@ Transforms the analysis into documentation:
 - PostgreSQL database (we recommend [Neon](https://neon.tech))
 - [Trigger.dev](https://trigger.dev) account
 - OpenAI or Google AI API key
-- GitHub Personal Access Token
 
 ### Installation
 
@@ -86,9 +122,6 @@ DATABASE_URL="postgresql://..."
 # API Keys (at least one AI provider required)
 OPENAI_API_KEY="sk-..."
 GOOGLE_GENERATIVE_AI_API_KEY="..."
-
-# GitHub MCP (Personal Access Token with repo scope)
-GITHUB_MCP_PAT="github_pat_..."
 
 # AI Models for analysis and generation
 ANALYZER_MODEL="openai/gpt-5-mini"
@@ -128,7 +161,7 @@ src/
 ├── db/                     # Database schema and client
 ├── mastra/                 # AI agents
 │   ├── agents/             # Agent definitions
-│   └── tools/              # MCP client setup
+│   └── tools/              # Filesystem tools for repo analysis
 ├── schemas/                # Zod schemas
 ├── trigger/                # Background tasks
 └── trpc/                   # tRPC routers
