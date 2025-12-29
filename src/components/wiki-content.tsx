@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { type ComponentPropsWithoutRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import { cn } from "@/lib/utils";
+
+import "highlight.js/styles/github-dark.css";
 
 interface WikiContentProps {
   content: string;
@@ -73,6 +77,7 @@ export function WikiContent({
     <article className="prose prose-sm prose-neutral dark:prose-invert max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
         components={{
           a: ({ href, children, ...props }: ComponentPropsWithoutRef<"a">) => {
             if (!href) {
@@ -149,6 +154,37 @@ export function WikiContent({
               <h2 id={id} {...props}>
                 {children}
               </h2>
+            );
+          },
+          // Custom code block styling
+          pre: ({ children, ...props }: ComponentPropsWithoutRef<"pre">) => (
+            <pre className="not-prose bg-transparent p-0 m-0 my-4" {...props}>
+              {children}
+            </pre>
+          ),
+          code: ({
+            children,
+            className,
+            ...props
+          }: ComponentPropsWithoutRef<"code">) => {
+            const isCodeBlock = className?.includes("hljs");
+            if (isCodeBlock) {
+              return (
+                <code
+                  className={cn(
+                    className,
+                    "leading-relaxed block p-4 rounded-lg text-xs",
+                  )}
+                  {...props}
+                >
+                  {children}
+                </code>
+              );
+            }
+            return (
+              <code className={className} {...props}>
+                {children}
+              </code>
             );
           },
         }}
