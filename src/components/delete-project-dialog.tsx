@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { trpc } from "@/trpc/client";
 import { Loader2, Trash2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface DeleteProjectDialogProps {
@@ -29,7 +29,6 @@ export function DeleteProjectDialog({
   project,
 }: DeleteProjectDialogProps) {
   const router = useRouter();
-  const params = useParams();
   const utils = trpc.useUtils();
 
   const deleteProject = trpc.projects.delete.useMutation({
@@ -39,10 +38,7 @@ export function DeleteProjectDialog({
       toast.success("Project deleted", {
         description: `"${project.name || "Unnamed Project"}" has been permanently deleted.`,
       });
-      // Navigate away if the deleted project was the current one
-      if (params.projectId === project.id) {
-        router.push("/");
-      }
+      router.push("/");
     },
     onError: (error) => {
       toast.error("Failed to delete project", {
