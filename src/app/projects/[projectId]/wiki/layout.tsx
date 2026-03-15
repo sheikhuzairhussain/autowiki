@@ -1,22 +1,14 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { DeleteProjectDialog } from "@/components/delete-project-dialog";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { WikiBreadcrumbs } from "@/components/wiki-breadcrumbs";
 import {
   POLLING_INTERVAL_ACTIVE,
@@ -34,7 +26,6 @@ export default function WikiLayout({ children }: WikiLayoutProps) {
   const projectId = params.projectId as string;
   const sectionSlug = params.sectionSlug as string | undefined;
   const pageSlug = params.pageSlug as string | undefined;
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Fetch all projects for the switcher
   const { data: projects = [] } = trpc.projects.list.useQuery(undefined, {
@@ -91,39 +82,9 @@ export default function WikiLayout({ children }: WikiLayoutProps) {
           {pageName && (
             <WikiBreadcrumbs sectionName={sectionName} pageName={pageName} />
           )}
-          {currentProject &&
-            (currentProject.status === "completed" ||
-              currentProject.status === "failed") && (
-              <div className="ml-auto">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeleteDialogOpen(true)}
-                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Delete project</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Delete project</TooltipContent>
-                </Tooltip>
-              </div>
-            )}
         </header>
         {children}
       </SidebarInset>
-      {currentProject && (
-        <DeleteProjectDialog
-          open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
-          project={{
-            id: currentProject.id,
-            name: currentProject.name,
-          }}
-        />
-      )}
     </SidebarProvider>
   );
 }
